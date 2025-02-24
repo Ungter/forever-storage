@@ -1,2 +1,2 @@
 # forever-storage
-Leveraging cheap ass transaction fees to say goodbye to cloud storage subscriptions
+Leveraging blockchain technology to say goodbye to cloud storage subscriptions
