@@ -57,7 +57,7 @@ async function storeImageInChunks(base64Data, imageId) {
             };
 
             // Maybe instead of waiting for txns to go through,
-            // we can just periodically check if a chunks are being processed correctly
+            // we can just periodically check if chunks are being recorded correctly
             // by calling the read function
             try {
                 const signedTx = await web3.eth.accounts.signTransaction(txObject, privateKey);
