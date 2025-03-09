@@ -5,14 +5,14 @@ require('dotenv').config();
 var web3 = new Web3(new Web3.providers.HttpProvider(process.env.WEB3_PROVIDER_URL))
 const contractAddress = process.env.CONTRACT_ADDRESS;
 
-const contractABI = process.env.CONTRACT_ABI;
+const contractABI = JSON.parse(process.env.CONTRACT_ABI);
 
 const userAddress = process.env.USER_ADDRESS;
 const privateKey = process.env.PRIVATE_KEY;
 
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-const CHUNK_SIZE = process.env.CHUNK_SIZE || 2048;
+const CHUNK_SIZE = parseInt(process.env.CHUNK_SIZE);
 
 async function storeImageInChunks(base64Data, imageId) {
     try {
@@ -22,7 +22,7 @@ async function storeImageInChunks(base64Data, imageId) {
         // Get the current nonce so that each txn uses the correct nonce
         let nonce = await web3.eth.getTransactionCount(userAddress, 'pending');
 
-        let totalGasUsed;
+        let totalGasUsed = 0;
         let BITotalGasUsed = BigInt(totalGasUsed);
 
         for (let i = 0; i < numberOfChunks; i++) {
@@ -49,6 +49,7 @@ async function storeImageInChunks(base64Data, imageId) {
             // EIP-1559
             // Estimate gas for this txn
             const estimatedGas = await contract.methods.storeImageChunk(imageId, hexChunk).estimateGas({from: userAddress});
+            console.log(`Estimated gas for chunk ${i + 1}: ${estimatedGas}`);
             
             const txObject = {
                 from: userAddress,
@@ -68,7 +69,7 @@ async function storeImageInChunks(base64Data, imageId) {
                 .then(receipt => {
                     const endTime = Date.now();
                     const duration = (endTime - startTime) / 1000; // Convert to seconds
-                    console.log(`chunk ${i + 1} stored successfully in ${duration}s. Tx Hash: ${receipt.transactionHash}`);
+                    console.log(`chunk ${i + 1} stored successfully in ${duration}s. Txn Hash: ${receipt.transactionHash}`);
                     BITotalGasUsed += receipt.gasUsed;
                     return receipt;
                 })
