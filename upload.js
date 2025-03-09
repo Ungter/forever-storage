@@ -97,7 +97,9 @@ async function storeImageInChunks(base64Data, imageId) {
     }
 }
 
-// example image thats ~65kb
 const base64Data = process.env.BASE64_DATA;
-const imageId = 11; 
+
+// random id for testing
+const imageId = Math.floor(Math.random() * 100) + 1;
+console.log(`Using image ID: ${imageId}`);
 storeImageInChunks(base64Data, imageId);
